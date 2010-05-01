@@ -12,7 +12,7 @@ module SimplePerformr
             @duration=duration
         end
     end
-    class PerformerRufus
+    class PerformrRufus
         @@store = {}
 
         attr_reader :scheduler
@@ -43,4 +43,5 @@ module SimplePerformr
         end
     end
 end
-#p=SimplePerformer::PerformerRufus.new
+p=SimplePerformr::PerformrRufus.new
+

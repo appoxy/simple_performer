@@ -1,3 +1,4 @@
+=begin
 puts "Loading performer..."
 
 controllers = Dir.new("#{RAILS_ROOT}/app/controllers").entries
@@ -27,3 +28,4 @@ controllers.each do |controller|
   end
 
 end
+=end
