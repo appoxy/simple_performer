@@ -5,18 +5,21 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simple_performr}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Travis Reeder"]
-  s.date = %q{2010-04-05}
+  s.date = %q{2010-05-01}
   s.description = %q{Appoxy SimplePerformr Client Gem ...}
   s.email = %q{travis@appoxy.com}
+  s.extra_rdoc_files = [
+    "README.markdown"
+  ]
   s.files = [
     "lib/api_auth.rb",
      "lib/base.rb",
      "lib/data_array.rb",
-     "lib/rack/simple_performr.rb",
+     "lib/sp_rack.rb",
      "lib/simple_performr.rb",
      "lib/simple_performr_rufus.rb"
   ]

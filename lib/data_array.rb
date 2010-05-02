@@ -1,10 +1,11 @@
 #Data array for now would be simple queue
 #This will be interface various places to store data
 module SimplePerformr
-  class DataArray
-    attr_accessor :stats
-    def intialize
-    end
+    class DataArray
+        attr_accessor :stats
 
-  end
+        def intialize
+        end
+
+    end
 end

@@ -1,20 +1,21 @@
 require 'rubygems'
-#require 'httparty'
 require 'rest_client'
 require 'eventmachine'
 require 'benchmark'
 require 'pp'
 require 'json'
-require File.dirname(__FILE__)+'/./rack/simple_performer'
+require 'base'
+require 'data_array'
+require 'api_auth'
+require 'sp_rack'
+
 #for Now data array would simply be a queue
 module SimplePerformr
 
-    class Base
-        def log str
-            puts str.to_s
-        end
+    # name is what this chunk of code will be referred to in the UI.
+    def self.benchmark(name, &block)
+        Performr.benchmark(name, &block)
     end
-
 
     class Performr #< ApiAuth
 
@@ -22,14 +23,14 @@ module SimplePerformr
 
             attr_accessor :data, :api_key, :base_uri, :timer
 
-            def config options={}, & blk
+            def config options={}, &blk
                 self.api_key = options[:key]
                 self.data= Queue.new
                 self.base_uri='http://localhost:3000/api/metrics'
 
                 puts api_key
                 run_update
-                instance_eval & blk if block_given?
+                instance_eval &blk if block_given?
             end
 
             def send_update
@@ -98,11 +99,18 @@ module SimplePerformr
                 end
             end
 
+            def test(*args)
 
-            def benchmark name, & block
-                stat=Benchmark::measure & block
+            end
+
+            def benchmark name, &block
+                opts = name
+                if opts.is_a? Hash
+                    name = opts[:name]
+                end
+                stat=Benchmark::measure &block
                 pp stat.to_hash, stat.class
-                collect_stats stat.to_hash.merge(:name => "#{name[:controller].camelize}##{name[:action]}")
+                collect_stats stat.to_hash.merge(:name => name)
             end
 
             def collect_stats stat

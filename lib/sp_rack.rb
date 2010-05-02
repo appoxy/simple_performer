@@ -11,28 +11,30 @@
 # middleware1 will call middleware2 and chain continues until the app is called and response
 # returned from app is returned back to server through middleware chain which is sent back as
 # response to request
+require 'simple_performr'
+
 module SimplePerformr
 
     class Rack
 
-      def initialize(app, message = "SimplePerformr stats")
-        @app = app
-        @message = message
-      end
-
-      def call(env)
-        dup._call(env)
-      end
-
-      def _call(env)
-        @request = {}
-        Performr.benchmark(@request) do
-          @response = @app.call(env)
-          @request[:controller] = env['action_controller.request.path_parameters']['controller']
-          @request[:action] = env['action_controller.request.path_parameters']['action']
+        def initialize(app, message = "SimplePerformr stats")
+            @app = app
+            @message = message
         end
-         @response
-      end
 
-  end
+        def call(env)
+            dup._call(env)
+        end
+
+        def _call(env)
+            puts 'env=' + env.inspect
+            name = {}
+            Performr.benchmark(name) do
+                @response = @app.call(env)
+                name[:name] = "#{env['action_controller.request.path_parameters']['controller'].camelize}##{env['action_controller.request.path_parameters']['action']}"
+            end
+            @response
+        end
+
+    end
 end
