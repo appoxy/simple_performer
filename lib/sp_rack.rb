@@ -27,7 +27,7 @@ module SimplePerformr
         end
 
         def _call(env)
-            puts 'env=' + env.inspect
+#            puts 'env=' + env.inspect
             name = {}
             Performr.benchmark(name) do
                 @response = @app.call(env)

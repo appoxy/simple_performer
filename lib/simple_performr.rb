@@ -13,8 +13,12 @@ require 'sp_rack'
 module SimplePerformr
 
     # name is what this chunk of code will be referred to in the UI.
-    def self.benchmark(name, &block)
-        Performr.benchmark(name, &block)
+    def self.benchmark(name, & block)
+        Performr.benchmark(name, & block)
+    end
+
+    def self.shutdown
+        EventMachine.stop
     end
 
     class Performr #< ApiAuth
@@ -25,12 +29,16 @@ module SimplePerformr
 
             def config options={}, &blk
                 self.api_key = options[:key]
-                self.data= Queue.new
+                self.data = Queue.new
                 self.base_uri='http://localhost:3000/api/metrics'
 
                 puts api_key
                 run_update
                 instance_eval &blk if block_given?
+            end
+
+            def reset_queue
+                self.data = Queue.new
             end
 
             def send_update
@@ -46,38 +54,11 @@ module SimplePerformr
                 response = RestClient.post(full_url(url), to_send, :content_type => :json)
             end
 
-            def full_url(path)
-                base_uri + path
-            end
-
-            def periodic_update
-
-                EventMachine.run {
-                    timer = EventMachine::PeriodicTimer.new(10) do
-                        puts "the time is #{Time.now}"
-                        begin
-                            send_update
-                        rescue => ex
-                            puts ex.message
-                            puts ex.backtrace
-                        end
-
-
-                    end
-                }
-                #end
-            end
-
-            def cancel_update
-                timer.cancel if timer
-            end
-
-
-            #
-
             def return_data
                 avg_metrics = {}
                 i=0
+                data = self.data
+                reset_queue # create a new one so the current queue doesn't have the opportunity to keep filling up and we try to keep popping too
                 until data.empty?
                     metric=data.pop
                     name=metric[:name]
@@ -93,22 +74,48 @@ module SimplePerformr
             end
 
 
+            def full_url(path)
+                base_uri + path
+            end
+
+            def periodic_update
+
+                EventMachine.run do
+                    @timer = EventMachine::PeriodicTimer.new(60) do
+                        puts "the time is #{Time.now}"
+                        begin
+                            send_update
+                        rescue => ex
+                            puts ex.message
+                            puts ex.backtrace
+                        end
+
+                    end
+                end
+            end
+
+            def cancel_update
+                timer.cancel if timer
+            end
+
+
             def run_update
                 Thread.new do
                     periodic_update
                 end
             end
 
-            def test(*args)
-
-            end
-
             def benchmark name, &block
                 opts = name
+                stat=Benchmark::measure &block
+                puts 'name2=' + name.inspect
                 if opts.is_a? Hash
                     name = opts[:name]
                 end
-                stat=Benchmark::measure &block
+                unless name && name.length > 0
+                    raise "Must provide a name for benchmark."
+                end
+                puts 'name =' + name
                 pp stat.to_hash, stat.class
                 collect_stats stat.to_hash.merge(:name => name)
             end
