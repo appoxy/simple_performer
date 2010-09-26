@@ -2,7 +2,7 @@ require 'rubygems'
 require 'httpparty'
 require 'rufus/scheduler'
 require 'json'
-module SimplePerformr
+module SimplePerformer
     class TimeBlock
         attr_reader :start_time, :end_time, :duration
 
@@ -43,5 +43,5 @@ module SimplePerformr
         end
     end
 end
-p=SimplePerformr::PerformrRufus.new
+p=SimplePerformer::PerformrRufus.new
 

@@ -1,4 +1,4 @@
-module SimplePerformr
+module SimplePerformer
     class ApiAuth
         attr_accessor :host
 

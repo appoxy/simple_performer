@@ -11,9 +11,9 @@
 # middleware1 will call middleware2 and chain continues until the app is called and response
 # returned from app is returned back to server through middleware chain which is sent back as
 # response to request
-require 'simple_performr'
+require 'simple_performer'
 
-module SimplePerformr
+module SimplePerformer
 
     class Rack
 

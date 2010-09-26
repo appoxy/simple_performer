@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
      "lib/base.rb",
      "lib/data_array.rb",
      "lib/sp_rack.rb",
-     "lib/simple_performr.rb",
+     "lib/simple_performer.rb",
      "lib/simple_performr_rufus.rb"
   ]
   s.homepage = %q{http://www.appoxy.com}

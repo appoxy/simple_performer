@@ -10,7 +10,7 @@ require 'api_auth'
 require 'sp_rack'
 
 #for Now data array would simply be a queue
-module SimplePerformr
+module SimplePerformer
 
     @@metrics_path = '/api/metrics'
     @@base_url = 'http://incoming.simpleperformr.com' + @@metrics_path
@@ -86,7 +86,7 @@ module SimplePerformr
 
 
             def full_url(path)
-               SimplePerformr.base_url + path
+               SimplePerformer.base_url + path
             end
 
             def periodic_update

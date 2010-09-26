@@ -1,4 +1,6 @@
+# This is commented out now because we can use the Rack loader now.
 =begin
+
 puts "Loading performer..."
 
 controllers = Dir.new("#{RAILS_ROOT}/app/controllers").entries

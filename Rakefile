@@ -1,4 +1,4 @@
-require './lib/simple_performr.rb'
+require './lib/simple_performer.rb'
 
 begin
     require 'jeweler'
