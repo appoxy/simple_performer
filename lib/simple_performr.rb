@@ -12,6 +12,9 @@ require 'sp_rack'
 #for Now data array would simply be a queue
 module SimplePerformr
 
+    @@metrics_path = '/api/metrics'
+    @@base_url = 'http://incoming.simpleperformr.com' + @@metrics_path
+
     # name is what this chunk of code will be referred to in the UI.
     def self.benchmark(name, & block)
         Performr.benchmark(name, & block)
@@ -19,6 +22,14 @@ module SimplePerformr
 
     def self.shutdown
         EventMachine.stop
+    end
+
+    def self.base_url=(url)
+        @@base_url = url + @@metrics_path
+    end
+
+    def self.base_url
+        @@base_url
     end
 
     class Performr #< ApiAuth
@@ -30,7 +41,7 @@ module SimplePerformr
             def config options={}, &blk
                 self.api_key = options[:key]
                 self.data = Queue.new
-                self.base_uri='http://localhost:3000/api/metrics'
+                self.base_uri=options[:base_uri]
 
                 puts api_key
                 run_update
@@ -42,15 +53,15 @@ module SimplePerformr
             end
 
             def send_update
-                puts "send_update api_key=" + api_key
+#                puts "send_update api_key=" + api_key
                 url = "/update_metrics/"+api_key
                 #consumer for data
                 #delete all data from queue after update
                 to_send = return_data
-                puts "sending json=" + to_send.inspect
+#                puts "sending json=" + to_send.inspect
 
                 to_send = to_send.to_json
-                puts 'posting to ' + full_url(url)
+#                puts 'posting to ' + full_url(url)
                 response = RestClient.post(full_url(url), to_send, :content_type => :json)
             end
 
@@ -62,7 +73,7 @@ module SimplePerformr
                 until data.empty?
                     metric=data.pop
                     name=metric[:name]
-                    avg_metrics[name]  ||={:count => 0, :user => 0, :system => 0, :total => 0, :real => 0}
+                    avg_metrics[name] ||= {:count => 0, :user => 0, :system => 0, :total => 0, :real => 0}
                     avg_metrics[name][:count]   += 1
                     avg_metrics[name][:user]    += metric[:user]
                     avg_metrics[name][:system]  += metric[:system]
@@ -75,17 +86,18 @@ module SimplePerformr
 
 
             def full_url(path)
-                base_uri + path
+               SimplePerformr.base_url + path
             end
 
             def periodic_update
 
                 EventMachine.run do
                     @timer = EventMachine::PeriodicTimer.new(60) do
-                        puts "the time is #{Time.now}"
+#                        puts "the time is #{Time.now}"
                         begin
                             send_update
                         rescue => ex
+                            puts 'Failed to send data to SimplePerformr!'
                             puts ex.message
                             puts ex.backtrace
                         end
@@ -106,7 +118,7 @@ module SimplePerformr
             end
 
             def benchmark name, &block
-                opts = name
+                opts = name     
                 stat=Benchmark::measure &block
                 puts 'name2=' + name.inspect
                 if opts.is_a? Hash
