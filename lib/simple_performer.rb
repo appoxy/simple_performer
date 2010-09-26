@@ -4,16 +4,28 @@ require 'eventmachine'
 require 'benchmark'
 require 'pp'
 require 'json'
-require 'base'
-require 'data_array'
-require 'api_auth'
-require 'sp_rack'
+require_relative 'base'
+require_relative 'data_array'
+require_relative 'api_auth'
+require_relative 'sp_rack'
 
 #for Now data array would simply be a queue
 module SimplePerformer
 
     @@metrics_path = '/api/metrics'
     @@base_url = 'http://incoming.simpleperformr.com' + @@metrics_path
+
+    class << self
+        attr_accessor :config,
+                      :service
+
+        def configure()
+            SimplePerformer.config ||= SimplePerformer::Config.new
+            yield(config)
+#            SimplePerformer.service = Performr.new(config.access_key, config.secret_key, :config=>config)
+            Performr.start
+        end
+    end
 
     # name is what this chunk of code will be referred to in the UI.
     def self.benchmark(name, & block)
@@ -39,13 +51,23 @@ module SimplePerformer
             attr_accessor :data, :api_key, :base_uri, :timer
 
             def config options={}, &blk
-                self.api_key = options[:key]
-                self.data = Queue.new
-                self.base_uri=options[:base_uri]
+                SimplePerformer.configure do |config|
+                    config.access_key = options[:access_key]
+                    config.host = options[:host]
+                end
 
-                puts api_key
-                run_update
                 instance_eval &blk if block_given?
+            end
+
+            def start
+                self.data = Queue.new
+
+                puts "api_key=" + api_key.to_s
+                if api_key
+                    # only start it if we passed in a key
+                    run_update
+                end
+
             end
 
             def reset_queue
@@ -86,7 +108,7 @@ module SimplePerformer
 
 
             def full_url(path)
-               SimplePerformer.base_url + path
+                SimplePerformer.base_url + path
             end
 
             def periodic_update
@@ -118,7 +140,7 @@ module SimplePerformer
             end
 
             def benchmark name, &block
-                opts = name     
+                opts = name
                 stat=Benchmark::measure &block
                 puts 'name2=' + name.inspect
                 if opts.is_a? Hash

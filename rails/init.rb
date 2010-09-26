@@ -1,3 +1,6 @@
+# Add special route for checking performance at '/simple_performer'
+
+
 # This is commented out now because we can use the Rack loader now.
 =begin
 

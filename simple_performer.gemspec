@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{simple_performr}
-  s.version = "0.0.3"
+  s.name = %q{simple_performer}
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Travis Reeder"]
-  s.date = %q{2010-05-01}
-  s.description = %q{Appoxy SimplePerformr Client Gem ...}
+  s.date = %q{2010-09-25}
+  s.description = %q{Appoxy SimplePerformer Client Gem ...}
   s.email = %q{travis@appoxy.com}
   s.extra_rdoc_files = [
     "README.markdown"
@@ -19,21 +19,21 @@ Gem::Specification.new do |s|
     "lib/api_auth.rb",
      "lib/base.rb",
      "lib/data_array.rb",
-     "lib/sp_rack.rb",
      "lib/simple_performer.rb",
-     "lib/simple_performr_rufus.rb"
+     "lib/simple_performr_rufus.rb",
+     "lib/sp_rack.rb"
   ]
   s.homepage = %q{http://www.appoxy.com}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
-  s.summary = %q{Appoxy SimplePerformr Client Gem}
+  s.rubygems_version = %q{1.3.7}
+  s.summary = %q{Appoxy SimplePerformer Client Gem}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rest-client>, [">= 0"])
       s.add_runtime_dependency(%q<eventmachine>, [">= 0"])
     else
