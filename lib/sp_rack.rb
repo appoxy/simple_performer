@@ -23,7 +23,7 @@ module SimplePerformer
         end
 
         def call(env)
-            dup._call(env)
+            dup._call(env) # why dup?
         end
 
         def _call(env)
