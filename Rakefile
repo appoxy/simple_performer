@@ -3,9 +3,9 @@ require './lib/simple_performer.rb'
 begin
     require 'jeweler'
     Jeweler::Tasks.new do |gemspec|
-        gemspec.name = "simple_performr"
-        gemspec.summary = "Appoxy SimplePerformr Client Gem"
-        gemspec.description = "Appoxy SimplePerformr Client Gem ..."
+        gemspec.name = "simple_performer"
+        gemspec.summary = "Appoxy SimplePerformer Client Gem"
+        gemspec.description = "Appoxy SimplePerformer Client Gem ..."
         gemspec.email = "travis@appoxy.com"
         gemspec.homepage = "http://www.appoxy.com"
         gemspec.authors = ["Travis Reeder"]

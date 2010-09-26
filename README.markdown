@@ -12,3 +12,4 @@ To wrap your own sections:
     SimplePerformr.benchmark("name_of_code_section") do
 
     end
+
