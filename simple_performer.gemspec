@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simple_performer}
-  s.version = "0.0.4"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Travis Reeder"]
-  s.date = %q{2010-09-25}
+  s.date = %q{2010-09-30}
   s.description = %q{Appoxy SimplePerformer Client Gem ...}
   s.email = %q{travis@appoxy.com}
   s.extra_rdoc_files = [
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.files = [
     "lib/api_auth.rb",
      "lib/base.rb",
+     "lib/config.rb",
      "lib/data_array.rb",
      "lib/simple_performer.rb",
      "lib/simple_performr_rufus.rb",

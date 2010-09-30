@@ -28,8 +28,8 @@ module SimplePerformer
     end
 
     # name is what this chunk of code will be referred to in the UI.
-    def self.benchmark(name, & block)
-        Performr.benchmark(name, & block)
+    def self.benchmark(name, &block)
+        Performr.benchmark(name, &block)
     end
 
     def self.shutdown
@@ -44,7 +44,16 @@ module SimplePerformer
         @@base_url
     end
 
-    class Performr #< ApiAuth
+    # Simple function that simply spits out the duration of the block
+    def self.puts_duration(&block)
+        start_time = Time.now
+        yield
+        end_time = Time.now
+        puts "Duration: #{(end_time-start_time)} seconds."
+    end
+
+    class Performr
+        #< ApiAuth
 
         class <<self
 
@@ -91,7 +100,8 @@ module SimplePerformer
                 avg_metrics = {}
                 i=0
                 data = self.data
-                reset_queue # create a new one so the current queue doesn't have the opportunity to keep filling up and we try to keep popping too
+                reset_queue
+                # create a new one so the current queue doesn't have the opportunity to keep filling up and we try to keep popping too
                 until data.empty?
                     metric=data.pop
                     name=metric[:name]
