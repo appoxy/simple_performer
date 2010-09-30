@@ -45,11 +45,12 @@ module SimplePerformer
     end
 
     # Simple function that simply spits out the duration of the block
-    def self.puts_duration(&block)
+    # - name is for reference.
+    def self.puts_duration(name, &block)
         start_time = Time.now
         yield
         end_time = Time.now
-        puts "Duration: #{(end_time-start_time)} seconds."
+        puts "#{name} duration: #{(end_time-start_time)} seconds."
     end
 
     class Performr

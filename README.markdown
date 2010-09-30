@@ -13,3 +13,12 @@ To wrap your own sections:
 
     end
 
+Other Utility Functions
+-----------------------
+
+To print duration of a block:
+
+    SimplePerformer.puts_duration ("name_of_code_section") do
+
+    end
+

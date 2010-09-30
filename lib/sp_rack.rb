@@ -1,6 +1,3 @@
-# I think rack middleware is ideal place to collect stats
-
-
 # Rack is stack of middleware
 # server middleware1(middleware2(middleware3( .... middlewareN (app)))
 # Rack middleware is an object that responds to call method and could be intialized with other middleware
