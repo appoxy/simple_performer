@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'rest_client'
-require 'eventmachine'
+#require 'eventmachine'
 require 'benchmark'
 require 'pp'
 require 'json'
@@ -23,6 +23,7 @@ module SimplePerformer
             SimplePerformer.config ||= SimplePerformer::Config.new
             yield(config)
 #            SimplePerformer.service = Performr.new(config.access_key, config.secret_key, :config=>config)
+            # todo: should delay start until used?
             Performr.start
         end
     end
@@ -33,7 +34,7 @@ module SimplePerformer
     end
 
     def self.shutdown
-        EventMachine.stop
+#        EventMachine.stop
     end
 
     def self.base_url=(url)
@@ -51,6 +52,48 @@ module SimplePerformer
         yield
         end_time = Time.now
         puts "#{name} duration: #{(end_time-start_time)} seconds."
+    end
+
+    class Aggregator
+        def initialize
+            @aggs = {}
+        end
+
+        def benchmark(name, &block)
+            start_time = Time.now
+            yield
+            end_time = Time.now
+            agg = @aggs[name]
+            agg = Agger.new(name) if agg.nil?
+            agg.add(end_time-start_time)
+            @aggs[name] = agg
+
+        end
+
+        # Prints current info
+        def puts(name)
+            agg = @aggs[name]
+            agg.puts
+        end
+    end
+
+    class Agger
+        attr_accessor :name, :sum, :count
+
+        def initialize(name)
+            @name = name
+            @sum = 0.0
+            @count = 0
+        end
+
+        def add(duration)
+            @sum += duration
+            @count += 1
+        end
+
+        def puts
+            Kernel.puts "Aggregator #{name}: count=#{count} avg=#{avg}"
+        end
     end
 
     class Performr
@@ -124,19 +167,19 @@ module SimplePerformer
 
             def periodic_update
 
-                EventMachine.run do
-                    @timer = EventMachine::PeriodicTimer.new(60) do
-#                        puts "the time is #{Time.now}"
-                        begin
-                            send_update
-                        rescue => ex
-                            puts 'Failed to send data to SimplePerformr!'
-                            puts ex.message
-                            puts ex.backtrace
-                        end
-
-                    end
-                end
+#                EventMachine.run do
+#                    @timer = EventMachine::PeriodicTimer.new(60) do
+##                        puts "the time is #{Time.now}"
+#                        begin
+#                            send_update
+#                        rescue => ex
+#                            puts 'Failed to send data to SimplePerformr!'
+#                            puts ex.message
+#                            puts ex.backtrace
+#                        end
+#
+#                    end
+#                end
             end
 
             def cancel_update
